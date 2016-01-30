@@ -2,18 +2,31 @@ var React = require('react');
 
 var MessageList = require('./MessageList');
 var MessageForm = require('./MessageForm');
+var MessageStore = require('./MessageStore');
 
 module.exports = React.createClass({
 	getInitialState: function() {
 		return {
-			messages: []
+			messages: MessageStore.getMessages()
 		};
 	},
 
-	onSend: function(newMessage) {
+	componentWillMount: function() {
+		MessageStore.subscribe(this.updateMessages);
+	},
+
+	componentWillUnmount: function() {
+		MessageStore.unsubscribe(this.updateMessages);
+	},
+
+	updateMessages: function() {
 		this.setState({
-			messages: this.state.messages.concat([newMessage]),
+			messages: MessageStore.getMessages()
 		});
+	},
+
+	onSend: function(newMessage) {
+		MessageStore.newMessage(newMessage);
 	},
 
 	render: function() {
