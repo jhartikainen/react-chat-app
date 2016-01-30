@@ -1,6 +1,6 @@
 var React = require('react');
 
-var ChatMessage = require('./ChatMessage');
+var MessageList = require('./MessageList');
 
 module.exports = React.createClass({
 	getInitialState: function() {
@@ -13,7 +13,7 @@ module.exports = React.createClass({
 	submit: function(ev) {
 		ev.preventDefault();
 
-		var newMessage = <ChatMessage message={this.state.input} />;
+		var newMessage = this.state.input;
 
 		this.setState({
 			messages: this.state.messages.concat([newMessage]),
@@ -27,7 +27,7 @@ module.exports = React.createClass({
 
 	render: function() {
 		return <div>
-			<div>{this.state.messages}</div>
+			<MessageList messages={this.state.messages} />
 			<form onSubmit={this.submit}>
 				<input value={this.state.input} onChange={this.updateInput} type="text" />
 				<input type="submit" value="Send" />
