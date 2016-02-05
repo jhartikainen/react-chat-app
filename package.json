@@ -13,6 +13,7 @@
     "babel-preset-react": "^6.3.13",
     "babelify": "^7.2.0",
     "react": "^0.14.6",
-    "react-dom": "^0.14.6"
+    "react-dom": "^0.14.6",
+    "ws": "^1.0.1"
   }
 }
