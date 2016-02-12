@@ -1,13 +1,17 @@
 var React = require('react');
 
 var ChatMessage = require('./ChatMessage');
+var JoinMessage = require('./JoinMessage');
 
-module.exports = React.createClass({
-	render: function() {
-		var messages = this.props.messages.map(function(msg) {
-			return <ChatMessage message={msg} />;
-		});
-
-		return <div>{messages}</div>;
+function createMessage(msg) {
+	if(msg.type === 'message') {
+		return <ChatMessage {...msg} />;
 	}
-});
+	else if(msg.type === 'join') {
+		return <JoinMessage name={msg.from} />;
+	}
+}
+
+module.exports = ({ messages }) => <div>
+		{messages.map(createMessage)}
+	</div>;

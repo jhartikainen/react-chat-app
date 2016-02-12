@@ -1,3 +1,4 @@
+const Identity = require('./Identity');
 var EventEmitter = require('events').EventEmitter;
 
 var emitter = new EventEmitter();
@@ -18,7 +19,9 @@ module.exports = {
 	},
 
 	newMessage: function(message) {
-		messages.push(message);
+		messages.push(Object.assign({
+			from: Identity.get()
+		}, message));
 		emitter.emit('update');
 	}
 };

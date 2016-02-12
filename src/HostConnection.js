@@ -21,6 +21,7 @@ module.exports = function() {
 
 		rtc.on('connect', function() {
 			peers.push(rtc);
+			emitter.emit('new-peer', rtc);
 		});
 
 		rtc.on('data', function(msg) {
@@ -50,6 +51,10 @@ module.exports = function() {
 
 		onMessage: function(callback) {
 			emitter.on('message', callback);
+		},
+
+		onNewPeer: function(callback) {
+			emitter.on('new-peer', callback);
 		}
 	};
 };

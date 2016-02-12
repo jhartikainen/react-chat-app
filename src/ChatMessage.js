@@ -1,7 +1,3 @@
 var React = require('react');
 
-module.exports = React.createClass({
-	render: function() {
-		return <p>{this.props.message}</p>;
-	}
-});
+module.exports = ({ message, from }) => <p>{from}: {message}</p>;

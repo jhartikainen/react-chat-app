@@ -2,11 +2,13 @@ var EventEmitter = require('events').EventEmitter;
 
 var ClientConnection = require('./ClientConnection');
 var HostConnection = require('./HostConnection');
+var Identity = require('./Identity');
+const UserStore = require('./UserStore');
 
 var connection = null;
 var emitter = new EventEmitter();
 
-function setupConnection(conn) {
+function setupConnection(conn, n) {
 	conn.onReady(function() {
 		connection = conn;
 		emitter.emit('status');
@@ -17,13 +19,23 @@ function setupConnection(conn) {
 	});
 }
 
+function createPacket(message) {
+	return Object.assign({
+		from: Identity.get()
+	}, message);
+}
+
 module.exports = {
 	isConnected: function() {
 		return connection !== null;
 	},
 
 	sendMessage: function(message) {
-		connection.send(message);
+		connection.send(createPacket(message));
+	},
+
+	sendTo: function(peer, message) {
+		peer.send(createPacket(message));
 	},
 
 	onMessage: function(cb) {
@@ -43,10 +55,27 @@ module.exports = {
 	},
 
 	host: function() {
-		setupConnection(HostConnection());
+		const conn = HostConnection();
+		setupConnection(conn);
+		conn.onNewPeer(peer => {
+			//user list does not include self, but in this case
+			//the host should tell the connected peer their identity
+			//as well, so we include it within the user listing
+			this.sendTo(peer, {
+				type: 'users',
+				users: UserStore.getUsers().concat([Identity.get()])
+			});
+		});
 	},
 
 	join: function() {
-		setupConnection(ClientConnection());
+		var conn = ClientConnection();
+		setupConnection(conn);
+
+		conn.onReady(() => {
+			this.sendMessage({
+				type: 'join'
+			});
+		});
 	}
 };

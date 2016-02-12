@@ -10,7 +10,10 @@ module.exports = React.createClass({
 	submit: function(ev) {
 		ev.preventDefault();
 
-		this.props.onSend(this.state.input);
+		this.props.onSend({
+			type: 'message',
+			message: this.state.input
+		});
 
 		this.setState({
 			input: ''
