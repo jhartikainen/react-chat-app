@@ -15,6 +15,8 @@
     "babelify": "^7.2.0",
     "react": "^0.14.6",
     "react-dom": "^0.14.6",
+    "simple-peer": "^6.0.4",
+    "simple-websocket": "^4.0.3",
     "ws": "^1.0.1"
   }
 }
